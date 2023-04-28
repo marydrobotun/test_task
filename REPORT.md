@@ -119,7 +119,7 @@ etl_operator
 ![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag_history.png)
 
 ## 4. Витрина данных
-Для витрины я создала отдельное представление LESSONS:
+Для витрины я создала отдельное представление LESSONS. Колонки выбрала на свой вкус, так как в задании не было указано, какие именно данные нужны для анализа.
 
 ```sql
 CREATE VIEW LESSONS(
