@@ -31,3 +31,25 @@ def save_data_to_table(data, table, connection_string):
         data = data[~data[pk].isin(old_data[pk])]
     data.to_sql(table_name, con=engine, index=False, if_exists='append')
 ```
+
+Также я создаю отдельный файл, в котором будут лежать данные о сущностях. Всего у нас 4 сущности: урок, модуль, поток, курс. В терминологии методологии "звезда" урок является таблицей фактов, остальные - таблицами измерений. По каждой сущности я сохраняю следующие данные:
+1. имя сущности
+2. имя таблицы, которая относится к данной сущности
+3. первичный ключ таблицы
+4. sql-запрос для получения из источника данных по сущности
+Пример для таблицы фактов:
+```    {
+
+        'entity_name': 'lesson',
+        'table_name': 'stream_module_lesson',
+        'pk': 'id',
+        'query_to_get_data': '''SELECT t1.*, t2.id as stream_module_id,
+             t3.id as stream_id, t4.id as course_id
+             FROM stream_module_lesson t1
+             JOIN stream_module t2 ON t2.id=t1.stream_module_id
+             JOIN stream t3 ON t3.id=t2.stream_id
+             JOIN course t4 ON t4.id=t3.course_id''',
+    }
+```
+Далее перехожу непосредственно к Airflow-операторам.
+В данном случае DAG будет состоять из одного оператора, который будет обновлять все таблицы.
