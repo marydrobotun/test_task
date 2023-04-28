@@ -119,3 +119,50 @@ etl_operator
 ![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag_history.png)
 
 ## 4. Витрина данных
+Для витрины я создала отдельное представление LESSONS:
+
+```sql
+CREATE VIEW LESSONS(
+	lesson_title,
+	lesson_description,
+	lesson_start_at,
+	lesson_end_at,
+	homework_url,
+	teacher_id,
+	online_lesson_join_url,
+	online_lesson_recording_url,
+	course_title,
+	stream_start_at,
+	stream_end_at,
+	stream_is_open,
+	stream_name,
+	homework_deadline_days,
+	module_title,
+	order_in_stream)
+AS
+
+SELECT
+	sml.title,
+	sml.description,
+	sml.start_at,
+	sml.end_at,
+	sml.homework_url,
+	sml.teacher_id,
+	sml.online_lesson_join_url,
+	sml.online_lesson_recording_url,
+	c.title,
+	s.start_at,
+	s.end_at,
+	s.is_open,
+	s.name,
+	s.homework_deadline_days,
+	sm.title,
+	sm.order_in_stream
+FROM stream_module_lesson sml 
+LEFT JOIN 
+	course c ON sml.course_id=c.id 
+LEFT JOIN
+	stream s ON sml.stream_id=s.id 
+LEFT JOIN	
+	stream_module sm ON sm.id=sml.stream_module_id 
+```
