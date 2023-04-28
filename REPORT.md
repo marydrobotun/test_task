@@ -91,7 +91,7 @@ from entities import entities
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2022, 1, 1)
+    'start_date': datetime(2023, 4, 28)
 }
 dag = DAG('etl_process', default_args=default_args, schedule_interval="@hourly")
 
