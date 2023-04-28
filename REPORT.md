@@ -87,5 +87,11 @@ etl_operator = PythonOperator(
     dag=dag
 )
 etl_operator
-
 ```
+Таким образом DAG выглядит на UI Airflow:
+![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag.png)
+
+Как видно из этого скриншота, он работает по расписанию, как и предполагалось:
+
+![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag_history.png)
+
