@@ -1,6 +1,7 @@
-import sqlite3
+from os.path import dirname
+import sys
 import pandas as pd
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine
 from datetime import datetime
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
@@ -11,24 +12,22 @@ from entities import entities
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2022, 1, 1)
+    'start_date': datetime(2023, 4, 28)
 }
-dag = DAG('etl_process', default_args=default_args, schedule_interval=None)
-# оператор для чтения данных из table1 и записи их во временный файл
+dag = DAG('etl_process', default_args=default_args, schedule_interval="@hourly")
 
 
-# функция для чтения данных из временного файла и записи их в table2
 def etl():
+    """This is the main ETL function."""
     source_engine = create_engine(source_connect_string)
     for table in entities:
         table_data = pd.read_sql(table['query_to_get_data'], source_engine)
         save_data_to_table(table_data, table, dwh_connect_string)
 
-# оператор для записи данных из временного файла в table2
-t1 = PythonOperator(
+
+etl_operator = PythonOperator(
     task_id='load_data',
     python_callable=etl,
     dag=dag
 )
-# установка зависимостей между задачами
-t1
+etl_operator
