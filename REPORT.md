@@ -95,3 +95,4 @@ etl_operator
 
 ![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag_history.png)
 
+## 4. Витрина данных
