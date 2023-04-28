@@ -8,7 +8,7 @@
 ![source](https://github.com/marydrobotun/test_task/blob/master/docs/star.png)
 ## 3. ETL
 В качестве инструмента ETL я выбираю Airflow. Тестовые БД - SQLite, для работы с данными - pandas, в качестве ORM - SQLAlchemy.
-Для начала создаю вспомогательную функцию, которая будет сохранять в БД данные из pandas DataFrame. Данная функция принимает DataFrame, словарь с атрибутами таблицы (название и первичный ключ) и строку коннекта к БД. Функция проверяет, есть ли уже в БД такая таблица. Если есть, то все строки, которые в ней уже есть, удаляются из датафрейма (сравнение по первичному ключу), чтобы записывались только новые строки.
+Для начала создаю вспомогательную функцию, которая будет сохранять в БД данные из pandas DataFrame. Данная функция принимает DataFrame, словарь с атрибутами таблицы (название и первичный ключ) и строку коннекта к БД. Функция проверяет, есть ли уже в БД такая таблица. Если есть, то все строки, которые в ней уже есть, удаляются из датафрейма (сравнение по первичному ключу), чтобы записывались только новые строки. Также она проверяет поле updated_at, если в таблице БД устаревшие данные, она их обновляет. (Здесь я использовала DELETE + INSERT вместо UPDATE из-за простоты, однако для улучшения производительности в реальном проекте лучше сделать замену на UPDATE)
 
 ```python
 import pandas as pd
@@ -23,14 +23,33 @@ def save_data_to_table(data, table, connection_string):
        This function checks whether the table already exists in a database, and if so,
        deletes all the data which is already loaded to the table out of the dataframe
        After that, it saves all the new data to the table provided in the arguments
+       If there is an "updated_at" column, it also checks whether the value of it in
+       new dataframe is bigger, and if so, updates it in a database
+
     """
     engine = create_engine(connection_string)
     table_name = table['table_name']
     pk = table['pk']
+
     if inspect(engine).has_table(table_name):
+        if 'updated_at' in data.columns:
+            old_data = pd.read_sql(f'select id, updated_at from {table_name}', engine)
+            data_to_update = data.merge(old_data, on='id', how='left')
+            data_to_update = data_to_update[data_to_update['updated_at_x'] > data_to_update['updated_at_y']]
+            data_to_update.drop(['updated_at_y'], axis=1, inplace=True)
+            data_to_update.rename(columns={'updated_at_x': 'updated_at'}, inplace=True)
+
+            for index, row in data_to_update.iterrows():
+                id = row['id']
+                delete_sql = f'DELETE FROM {table_name} WHERE id={id}'
+                engine.execute(delete_sql)
+            data_to_update.to_sql(table_name, con=engine, index=False, if_exists='append')
+
         old_data = pd.read_sql(f'select id from {table_name}', engine)
         data = data[~data[pk].isin(old_data[pk])]
+
     data.to_sql(table_name, con=engine, index=False, if_exists='append')
+
 ```
 
 Также я создаю отдельный файл, в котором будут лежать данные о сущностях. Всего у нас 4 сущности: урок, модуль, поток, курс. В терминологии методологии "звезда" урок является таблицей фактов, остальные - таблицами измерений. По каждой сущности я сохраняю следующие данные:
