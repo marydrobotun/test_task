@@ -71,9 +71,9 @@ def save_data_to_table(data, table, connection_string):
         'query_to_get_data': '''SELECT t1.*, t2.id as stream_module_id,
              t3.id as stream_id, t4.id as course_id
              FROM stream_module_lesson t1
-             JOIN stream_module t2 ON t2.id=t1.stream_module_id
-             JOIN stream t3 ON t3.id=t2.stream_id
-             JOIN course t4 ON t4.id=t3.course_id''',
+             LEFT JOIN stream_module t2 ON t2.id=t1.stream_module_id
+             LEFT JOIN stream t3 ON t3.id=t2.stream_id
+             LEFT JOIN course t4 ON t4.id=t3.course_id''',
 }
 ```
 Далее перехожу непосредственно к Airflow-операторам.
