@@ -1,11 +1,11 @@
 # Отчет по заданию
 ## 1-2. Схема данных в DWH
 Изначально данные в БД-источнике находятся в 3NF:
-![source](https://github.com/marydrobotun/test_task/blob/master/docs/3nf.png)
+![source](https://github.com/marydrobotun/test_task/blob/main/docs/3nf.png)
 
 В данном случае, так как целью задачи является витрина данных для анализа и визуализации, я считаю целесообразным выбрать схему “Звезда”. Данная схема очень проста, дает большую производительность, и является стандартом для витрин данных. Многие BI инструменты хорошо работают с такими схемами. Недостаток данной схемы - относительно высокий уровень избыточности данных, однако он компенсируется повышением производительности. Также, если мы предполагаем, что уже загруженные строки не будут обновляться, эта избыточность данных не дает возможность для появления аномалий.
 Таким образом, схема модели в хранилище:
-![dwh](https://github.com/marydrobotun/test_task/blob/master/docs/star.png)
+![dwh](https://github.com/marydrobotun/test_task/blob/main/docs/star.png)
 ## 3. ETL
 Здесь я выделила два случая.
 1. У нас в таблицах БД-источника появились новые данные. То есть, в таблицах БД-источника появились id, которые отсутствуют в БД-хранилище. В этом случае нам нужно дозаписать все новые строки в БД-хранилище.
@@ -112,11 +112,11 @@ etl_operator = PythonOperator(
 etl_operator
 ```
 Таким образом DAG выглядит на UI Airflow:
-![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag.png)
+![source](https://github.com/marydrobotun/test_task/blob/main/docs/dag.png)
 
 Как видно из этого скриншота, он работает по расписанию, как и предполагалось:
 
-![source](https://github.com/marydrobotun/test_task/blob/master/docs/dag_history.png)
+![source](https://github.com/marydrobotun/test_task/blob/main/docs/dag_history.png)
 
 ## 4. Витрина данных
 Для витрины я создала отдельное представление LESSONS. Колонки выбрала на свой вкус, так как в задании не было указано, какие именно данные нужны для анализа.
