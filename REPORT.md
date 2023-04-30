@@ -169,5 +169,5 @@ LEFT JOIN
 
 В DataLens в виде графиков:
 
-![source](https://github.com/marydrobotun/test_task/blob/master/docs/dashboard.png)
+![source](https://github.com/marydrobotun/test_task/blob/main/docs/dashboard.png)
 
