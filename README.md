@@ -16,7 +16,7 @@
 
 ```dags_folder = ~/my_projects/skyeng_test/dags```
 
-5. В файле common/settings.py указать подключения к базам данных
+5. В файле [common/settings.py](https://github.com/marydrobotun/test_task/blob/master/common/settings.py) указать подключения к базам данных
 
 6. Добавить папку [common](https://github.com/marydrobotun/test_task/tree/master/common) в переменную PYTHONPATH. Например:
 
