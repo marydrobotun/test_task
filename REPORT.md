@@ -166,3 +166,8 @@ LEFT JOIN
 LEFT JOIN	
 	stream_module sm ON sm.id=sml.stream_module_id 
 ```
+
+В DataLens в виде графиков:
+
+![source](https://github.com/marydrobotun/test_task/blob/master/docs/dashboard.png)
+
