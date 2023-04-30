@@ -13,4 +13,5 @@
 ```export PYTHONPATH="$PYTHONPATH:~/my_projects/skyeng_test/common"```
 6. Запустить Airflow в тестовом режиме
 ```airflow standalone```
-7. 
+7. Зайти на localhost:8080 и увидеть там наш даг:
+
