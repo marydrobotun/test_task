@@ -1,5 +1,5 @@
-# test_task
-skyeng test task
+# skyeng test_task
+Это небольшое руководство о том, как запустить ETL. Отчет по тестовому заданию [здесь](https://github.com/marydrobotun/test_task/blob/master/REPORT.md) :)
 Как развернуть?
 1. Клонировать проект
 ```git clone https://github.com/marydrobotun/test_task.git```
