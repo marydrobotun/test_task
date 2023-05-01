@@ -119,7 +119,40 @@ etl_operator
 ![source](https://github.com/marydrobotun/test_task/blob/main/docs/dag_history.png)
 
 ## 4. Витрина данных
-Для витрины я создала отдельное представление LESSONS. Колонки выбрала на свой вкус, так как в задании не было указано, какие именно данные нужны для анализа.
+
+Здесь как раз можно увидеть преимущество схемы "Звезда". Например, если нам для аналитики нужна витрина с уроками по всем курсам, но при этом нас не интересуют модуль и поток, можно написать такой запрос:
+
+```sql
+CREATE VIEW COURSE_LESSONS(
+	lesson_title,
+	lesson_description,
+	lesson_start_at,
+	lesson_end_at,
+	homework_url,
+	teacher_id,
+	online_lesson_join_url,
+	online_lesson_recording_url,
+	course_title)
+AS
+
+SELECT
+	sml.title,
+	sml.description,
+	sml.start_at,
+	sml.end_at,
+	sml.homework_url,
+	sml.teacher_id,
+	sml.online_lesson_join_url,
+	sml.online_lesson_recording_url,
+	c.title,
+FROM stream_module_lesson sml 
+LEFT JOIN 
+	course c ON sml.course_id=c.id 
+
+```
+Здесь всего один JOIN, в то время как при старой схеме данных нам потребовалось бы выполнить целых три.
+Если нам для аналитики нужна витрина с уроками только по модулям, но при этом курс и поток не важны, аналогичным образом нужно будет выполнить всего один JOIN.
+Чтобы собрать все данные, нужно, как и в старой схеме, выполнить три JOIN:
 
 ```sql
 CREATE VIEW LESSONS(
