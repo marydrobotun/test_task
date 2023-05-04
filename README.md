@@ -10,7 +10,7 @@
 
 3. Установить зависимости. Находясь в папке проекта, выполнить команду:
 
-```pip install requirements.txt```
+```pip install -r requirements.txt```
 
 4. В файле airflow.cfg поменять dags_folder на путь к папке [dags](https://github.com/marydrobotun/test_task/tree/main/dags) внутри проекта. Например:
 
